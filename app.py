@@ -1,7 +1,7 @@
 """
 DETERMINAFACILE - Piattaforma Nazionale
 Generatore Universale di Determine di Affidamento Diretto (D.Lgs 36/2023)
-Versione: 4.0 (Integrazione Controlli Istituzionali)
+Versione: 4.1 (Fix scope variabili expander)
 """
 
 import streamlit as st
@@ -377,31 +377,30 @@ with col_left:
     
     # === NUOVA SEZIONE: RIFERIMENTI BILANCIO ===
     st.markdown("#### 2bis. Riferimenti Bilancio (DUP/PEG)")
-    with st.expander("📋 Delibere di Programmazione", expanded=False):
-        st.caption("Inserisci gli estremi delle delibere per un atto completo e conforme ai controlli.")
-        
-        st.markdown("**DUP - Documento Unico di Programmazione**")
-        dup1, dup2 = st.columns(2)
-        with dup1: dup_num = st.text_input("N. Delibera C.C. (DUP)", placeholder="es. 28")
-        with dup2: dup_data = st.date_input("Data Delibera DUP", value=None, key="dup_data")
-        dup_periodo = st.text_input("Periodo DUP", placeholder="es. 2025/2027")
-        
-        st.markdown("**Nota Aggiornamento DUP** (opzionale)")
-        ndup1, ndup2 = st.columns(2)
-        with ndup1: nota_dup_num = st.text_input("N. Delibera Nota Agg.", placeholder="es. 54")
-        with ndup2: nota_dup_data = st.date_input("Data Nota Agg.", value=None, key="nota_dup_data")
-        
-        st.markdown("**Bilancio di Previsione**")
-        bil1, bil2 = st.columns(2)
-        with bil1: bilancio_num = st.text_input("N. Delibera C.C. (Bilancio)", placeholder="es. 55")
-        with bil2: bilancio_data = st.date_input("Data Delibera Bilancio", value=None, key="bil_data")
-        bilancio_triennio = st.text_input("Triennio Bilancio", placeholder="es. 2025-2027")
-        
-        st.markdown("**PEG - Piano Esecutivo di Gestione**")
-        peg1, peg2 = st.columns(2)
-        with peg1: peg_num = st.text_input("N. Delibera G.C. (PEG)", placeholder="es. 112")
-        with peg2: peg_data = st.date_input("Data Delibera PEG", value=None, key="peg_data")
-        peg_periodo = st.text_input("Periodo PEG", placeholder="es. 2025/2027")
+    st.caption("Inserisci gli estremi delle delibere per un atto completo e conforme ai controlli.")
+    
+    st.markdown("**DUP - Documento Unico di Programmazione**")
+    dup1, dup2 = st.columns(2)
+    with dup1: dup_num = st.text_input("N. Delibera C.C. (DUP)", placeholder="es. 28")
+    with dup2: dup_data = st.date_input("Data Delibera DUP", value=None, key="dup_data")
+    dup_periodo = st.text_input("Periodo DUP", placeholder="es. 2025/2027")
+    
+    st.markdown("**Nota Aggiornamento DUP** (opzionale)")
+    ndup1, ndup2 = st.columns(2)
+    with ndup1: nota_dup_num = st.text_input("N. Delibera Nota Agg.", placeholder="es. 54")
+    with ndup2: nota_dup_data = st.date_input("Data Nota Agg.", value=None, key="nota_dup_data")
+    
+    st.markdown("**Bilancio di Previsione**")
+    bil1, bil2 = st.columns(2)
+    with bil1: bilancio_num = st.text_input("N. Delibera C.C. (Bilancio)", placeholder="es. 55")
+    with bil2: bilancio_data = st.date_input("Data Delibera Bilancio", value=None, key="bil_data")
+    bilancio_triennio = st.text_input("Triennio Bilancio", placeholder="es. 2025-2027")
+    
+    st.markdown("**PEG - Piano Esecutivo di Gestione**")
+    peg1, peg2 = st.columns(2)
+    with peg1: peg_num = st.text_input("N. Delibera G.C. (PEG)", placeholder="es. 112")
+    with peg2: peg_data = st.date_input("Data Delibera PEG", value=None, key="peg_data")
+    peg_periodo = st.text_input("Periodo PEG", placeholder="es. 2025/2027")
 
     st.markdown("#### 3. Fornitore")
     ragione_sociale = st.text_input("Ragione Sociale")
