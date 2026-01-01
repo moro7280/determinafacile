@@ -1,7 +1,7 @@
 """
 DETERMINAFACILE - Piattaforma Nazionale
 Generatore Universale di Determine di Affidamento Diretto (D.Lgs 36/2023)
-Versione: 3.2 (Fix Bordi Input)
+Versione: 4.0 (Integrazione Controlli Istituzionali)
 """
 
 import streamlit as st
@@ -374,6 +374,34 @@ with col_left:
     area_settore = st.text_input("Area / Settore", placeholder="es. AREA TECNICA")
     finalita = st.text_area("Finalità Pubblica", height=70)
     durata_servizio = st.text_input("Durata / Consegna")
+    
+    # === NUOVA SEZIONE: RIFERIMENTI BILANCIO ===
+    st.markdown("#### 2bis. Riferimenti Bilancio (DUP/PEG)")
+    with st.expander("📋 Delibere di Programmazione", expanded=False):
+        st.caption("Inserisci gli estremi delle delibere per un atto completo e conforme ai controlli.")
+        
+        st.markdown("**DUP - Documento Unico di Programmazione**")
+        dup1, dup2 = st.columns(2)
+        with dup1: dup_num = st.text_input("N. Delibera C.C. (DUP)", placeholder="es. 28")
+        with dup2: dup_data = st.date_input("Data Delibera DUP", value=None, key="dup_data")
+        dup_periodo = st.text_input("Periodo DUP", placeholder="es. 2025/2027")
+        
+        st.markdown("**Nota Aggiornamento DUP** (opzionale)")
+        ndup1, ndup2 = st.columns(2)
+        with ndup1: nota_dup_num = st.text_input("N. Delibera Nota Agg.", placeholder="es. 54")
+        with ndup2: nota_dup_data = st.date_input("Data Nota Agg.", value=None, key="nota_dup_data")
+        
+        st.markdown("**Bilancio di Previsione**")
+        bil1, bil2 = st.columns(2)
+        with bil1: bilancio_num = st.text_input("N. Delibera C.C. (Bilancio)", placeholder="es. 55")
+        with bil2: bilancio_data = st.date_input("Data Delibera Bilancio", value=None, key="bil_data")
+        bilancio_triennio = st.text_input("Triennio Bilancio", placeholder="es. 2025-2027")
+        
+        st.markdown("**PEG - Piano Esecutivo di Gestione**")
+        peg1, peg2 = st.columns(2)
+        with peg1: peg_num = st.text_input("N. Delibera G.C. (PEG)", placeholder="es. 112")
+        with peg2: peg_data = st.date_input("Data Delibera PEG", value=None, key="peg_data")
+        peg_periodo = st.text_input("Periodo PEG", placeholder="es. 2025/2027")
 
     st.markdown("#### 3. Fornitore")
     ragione_sociale = st.text_input("Ragione Sociale")
@@ -394,6 +422,13 @@ with col_left:
     with cc2: citta = st.text_input("Città")
     with cc3: provincia_forn = st.text_input("PR", max_chars=2)
     piva_cf = st.text_input("P.IVA / CF")
+    
+    # === NUOVA SEZIONE: DURC ===
+    st.markdown("**DURC - Documento Unico Regolarità Contributiva**")
+    durc1, durc2, durc3 = st.columns(3)
+    with durc1: durc_protocollo = st.text_input("Protocollo DURC", placeholder="es. INPS_47495993")
+    with durc2: durc_esito = st.selectbox("Esito", ["REGOLARE", "IRREGOLARE", "In attesa"])
+    with durc3: durc_scadenza = st.date_input("Scadenza Validità", value=None, key="durc_scad")
     
     st.markdown("**Dati Preventivo**")
     p1, p2, p3 = st.columns(3)
@@ -419,6 +454,20 @@ with col_left:
     o1, o2 = st.columns(2)
     with o1: mepa = st.checkbox("Acquisto su MEPA", value=(imponibile>=5000))
     with o2: no_garanzia = st.checkbox("Esenzione Garanzia (Art. 53)", value=True)
+    
+    # === NUOVA SEZIONE: VISTO REGOLARITA' CONTABILE ===
+    st.markdown("#### 6. Visto Regolarità Contabile")
+    st.caption("Dati per il visto di regolarità contabile ex art. 183 c.7 D.Lgs. 267/2000")
+    visto_nome = st.text_input("Nome Resp. Area Finanziaria", placeholder="es. Dott. Giuseppe Verdi")
+    visto_qualifica = st.text_input("Qualifica Resp. Finanziario", value="Responsabile dell'Area Economico-Finanziaria")
+    includi_visto = st.checkbox("Includi sezione visto nel documento", value=True)
+    
+    # === NUOVA SEZIONE: MODALITA' DI RICORSO ===
+    st.markdown("#### 7. Informazioni Trasparenza")
+    st.caption("Informazioni obbligatorie per trasparenza amministrativa")
+    tar_competente = st.text_input("TAR Competente", placeholder="es. TAR Marche")
+    includi_ricorsi = st.checkbox("Includi sezione ricorsi nel documento", value=True)
+    includi_conflitto = st.checkbox("Includi attestazione conflitto interessi", value=True)
 
 
 # =============================================================================
@@ -445,7 +494,31 @@ with col_right:
         "capitolo_bilancio": capitolo, "esercizio_finanziario": esercizio,
         "rup_nome": rup, "rup_cognome": "", "rup_qualifica": qualifica_responsabile,
         "importo_sotto_5000": imponibile < 5000,
-        "usa_mepa": mepa, "piccola_fornitura": no_garanzia
+        "usa_mepa": mepa, "piccola_fornitura": no_garanzia,
+        # === NUOVI CAMPI: DELIBERE BILANCIO ===
+        "dup_num": dup_num, 
+        "dup_data": datetime.combine(dup_data, datetime.min.time()) if dup_data else None,
+        "dup_periodo": dup_periodo,
+        "nota_dup_num": nota_dup_num,
+        "nota_dup_data": datetime.combine(nota_dup_data, datetime.min.time()) if nota_dup_data else None,
+        "bilancio_num": bilancio_num,
+        "bilancio_data": datetime.combine(bilancio_data, datetime.min.time()) if bilancio_data else None,
+        "bilancio_triennio": bilancio_triennio,
+        "peg_num": peg_num,
+        "peg_data": datetime.combine(peg_data, datetime.min.time()) if peg_data else None,
+        "peg_periodo": peg_periodo,
+        # === NUOVI CAMPI: DURC ===
+        "durc_protocollo": durc_protocollo,
+        "durc_esito": durc_esito,
+        "durc_scadenza": datetime.combine(durc_scadenza, datetime.min.time()) if durc_scadenza else None,
+        # === NUOVI CAMPI: VISTO REGOLARITA' CONTABILE ===
+        "visto_nome": visto_nome,
+        "visto_qualifica": visto_qualifica,
+        "includi_visto": includi_visto,
+        # === NUOVI CAMPI: RICORSI E TRASPARENZA ===
+        "tar_competente": tar_competente,
+        "includi_ricorsi": includi_ricorsi,
+        "includi_conflitto": includi_conflitto
     }
     
     valido, errori = valida_dati(dati_form)
